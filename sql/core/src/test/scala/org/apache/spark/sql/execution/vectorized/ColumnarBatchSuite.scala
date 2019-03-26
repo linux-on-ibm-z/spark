@@ -446,7 +446,7 @@ class ColumnarBatchSuite extends SparkFunSuite {
 
       if (ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN)) {
         // Ensure array contains Little Endian floats
-        val bb = ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN)
+        val bb = ByteBuffer.wrap(buffer).order(ByteOrder.BIG_ENDIAN)
         Platform.putFloat(buffer, Platform.BYTE_ARRAY_OFFSET, bb.getFloat(0))
         Platform.putFloat(buffer, Platform.BYTE_ARRAY_OFFSET + 4, bb.getFloat(4))
       }
@@ -530,7 +530,7 @@ class ColumnarBatchSuite extends SparkFunSuite {
 
       if (ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN)) {
         // Ensure array contains Little Endian doubles
-        val bb = ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN)
+        val bb = ByteBuffer.wrap(buffer).order(ByteOrder.BIG_ENDIAN)
         Platform.putDouble(buffer, Platform.BYTE_ARRAY_OFFSET, bb.getDouble(0))
         Platform.putDouble(buffer, Platform.BYTE_ARRAY_OFFSET + 8, bb.getDouble(8))
       }
