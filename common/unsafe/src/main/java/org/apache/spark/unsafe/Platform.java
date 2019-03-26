@@ -58,7 +58,6 @@ public final class Platform {
           Class.forName("java.nio.Bits", false, ClassLoader.getSystemClassLoader());
         Method unalignedMethod = bitsClass.getDeclaredMethod("unaligned");
         unalignedMethod.setAccessible(true);
-      //Since java.nio.Bits.unaligned() doesn't return true on ppc (See JDK-8165231)
         if(arch.matches("^(s390x|s390)$")){
          _unaligned=true;
         }else{
