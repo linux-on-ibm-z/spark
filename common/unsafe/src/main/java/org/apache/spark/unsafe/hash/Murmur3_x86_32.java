@@ -17,6 +17,7 @@
 
 package org.apache.spark.unsafe.hash;
 
+import java.nio.ByteOrder;
 import org.apache.spark.unsafe.Platform;
 
 /**
@@ -25,6 +26,8 @@ import org.apache.spark.unsafe.Platform;
 public final class Murmur3_x86_32 {
   private static final int C1 = 0xcc9e2d51;
   private static final int C2 = 0x1b873593;
+
+  private static final boolean isBigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
   private final int seed;
 
@@ -92,8 +95,10 @@ public final class Murmur3_x86_32 {
     int h1 = seed;
     for (int i = 0; i < lengthInBytes; i += 4) {
       int halfWord = Platform.getInt(base, offset + i);
-      int k1 = mixK1(halfWord);
-      h1 = mixH1(h1, k1);
+      if (isBigEndian) {
+        halfWord = Integer.reverseBytes(halfWord);
+      }
+      h1 = mixH1(h1, mixK1(halfWord));
     }
     return h1;
   }

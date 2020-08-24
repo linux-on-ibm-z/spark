@@ -17,6 +17,8 @@
 
 package org.apache.spark.util.sketch;
 
+import java.nio.ByteOrder;
+
 /**
  * 32-bit Murmur3 hasher.  This is based on Guava's Murmur3_32HashFunction.
  */
@@ -25,6 +27,8 @@ package org.apache.spark.util.sketch;
 final class Murmur3_x86_32 {
   private static final int C1 = 0xcc9e2d51;
   private static final int C2 = 0x1b873593;
+
+  private static final boolean isBigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
   private final int seed;
 
@@ -92,8 +96,10 @@ final class Murmur3_x86_32 {
     int h1 = seed;
     for (int i = 0; i < lengthInBytes; i += 4) {
       int halfWord = Platform.getInt(base, offset + i);
-      int k1 = mixK1(halfWord);
-      h1 = mixH1(h1, k1);
+      if (isBigEndian) {
+        halfWord = Integer.reverseBytes(halfWord);
+      }
+      h1 = mixH1(h1, mixK1(halfWord));
     }
     return h1;
   }
